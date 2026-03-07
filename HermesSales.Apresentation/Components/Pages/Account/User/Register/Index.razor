@@ -1,0 +1,61 @@
+﻿@page "/register"
+@using HermesSales.Apresentation.Handlers
+@inject NavigationManager Navigation
+@inject AuthHandler AuthHandler
+@rendermode InteractiveServer
+
+<MudPaper Class="pa-6 mx-auto" MaxWidth="400px">
+    <MudText Typo="Typo.h5">Criar Conta</MudText>
+
+    <MudTextField @bind-Value="model.Email"
+                  Label="Email"
+                  Required="true" />
+
+    <MudTextField @bind-Value="model.Password"
+                  Label="Senha"
+                  InputType="InputType.Password"
+                  Required="true" />
+
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               OnClick="Register">
+        Cadastrar
+    </MudButton>
+
+    @if (errorMessage != null)
+    {
+        <MudText Color="Color.Error">@errorMessage</MudText>
+    }
+</MudPaper>
+
+@code {
+    private RegisterModel model = new();
+
+    public class RegisterModel
+    {
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
+
+    private string? errorMessage;
+
+    private async Task Register()
+    {
+        try
+        {
+            var result = await AuthHandler.Register(model);
+
+            if (result)
+            {
+                Navigation.NavigateTo("/");
+            }            
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Erro ao registrar usuário: {ex.Message}";
+            Console.WriteLine("Erro aquiii" + ex);
+            return;
+        }
+    }
+
+}
