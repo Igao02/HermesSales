@@ -3,6 +3,16 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ApiWeb", policy =>
+    {
+        policy.WithOrigins("https://localhost:7127")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // ----------------------
 // Banco de dados
 // ----------------------
@@ -28,6 +38,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors("ApiWeb");
 
 // ----------------------
 // Swagger

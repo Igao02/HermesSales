@@ -14,9 +14,6 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Src/HermesSales.Api/HermesSales.Api.csproj", "Src/HermesSales.Api/"]
 COPY ["Src/HermesSales.Infrastructure/HermesSales.Infrastructure.csproj", "Src/HermesSales.Infrastructure/"]
-COPY ["Src/HermesSales.Domain/HermesSales.Domain.csproj", "Src/HermesSales.Domain/"]
-COPY ["Src/HermesSales.DomainCore/HermesSales.DomainCore.csproj", "Src/HermesSales.DomainCore/"]
-COPY ["Src/HermesSales.SharedKernel/HermesSales.SharedKernel.csproj", "Src/HermesSales.SharedKernel/"]
 RUN dotnet restore "./Src/HermesSales.Api/HermesSales.Api.csproj"
 COPY . .
 WORKDIR "/src/Src/HermesSales.Api"

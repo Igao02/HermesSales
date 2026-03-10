@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HermesSales.Infrastructure\HermesSales.Infrastructure.csproj" />
+    <ProjectReference Include="..\HermesSales.SharedKernel\HermesSales.SharedKernel.csproj" />
   </ItemGroup>
 
 </Project>
