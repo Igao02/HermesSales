@@ -1,9 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
 
 <MudNavMenu>
     <AuthorizeView>
         <Authorized>
             <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+            <MudNavLink Icon="@Icons.Material.Filled.Logout" OnClick="Logout">Sair</MudNavLink>
         </Authorized>
         <NotAuthorized>
             <MudNavLink Href="register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Cadastrar-se</MudNavLink>
@@ -11,5 +14,13 @@
         </NotAuthorized>
     </AuthorizeView>
 </MudNavMenu>
+
+@code {
+    private async Task Logout()
+    {
+        await JS.InvokeAsync<bool>("logoutWithFetch");
+        Navigation.NavigateTo("/login", true);
+    }
+}
 
 

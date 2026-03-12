@@ -11,3 +11,15 @@ window.loginWithFetch = async function (email, password) {
         return false;
     }
 };
+
+window.logoutWithFetch = async function () {
+    try {
+        const response = await fetch('/auth/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        return response.ok;
+    } catch {
+        return false;
+    }
+};

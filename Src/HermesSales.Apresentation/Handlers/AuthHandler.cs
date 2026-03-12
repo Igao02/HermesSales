@@ -76,28 +76,4 @@ public class AuthHandler
             };
         }
     }
-
-    public async Task<AuthResult> Login(string email, string password)
-    {
-        var client = _httpClientFactory.CreateClient();
-
-        var response = await client.PostAsJsonAsync(
-            "https://localhost:7127/auth/login",
-            new
-            {
-                email,
-                password
-            });
-
-        if (response.IsSuccessStatusCode)
-        {
-            return new AuthResult { Success = true };
-        }
-
-        return new AuthResult
-        {
-            Success = false,
-            Error = "Usuário ou senha inválidos."
-        };
-    }
 }
