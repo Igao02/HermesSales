@@ -1,0 +1,123 @@
+﻿@page "/register"
+@using HermesSales.Apresentation.Handlers
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits IndexPageBase
+@rendermode InteractiveServer
+
+<div class="register-page">
+    <MudContainer MaxWidth="MaxWidth.Small" Class="py-8">
+
+        <AuthorizeView>
+            <Authorized>
+                <h3>Usuário autenticado</h3>
+            </Authorized>
+
+            <NotAuthorized>
+                <h3>Usuário NÃO autenticado</h3>
+            </NotAuthorized>
+        </AuthorizeView>
+        <MudGrid Justify="Justify.Center">
+            <MudItem xs="12">
+                <!-- Card Principal -->
+                <MudPaper Elevation="5" Class="register-card pa-8" Outlined="false" Rounded="true">
+                    <!-- Logo e Título -->
+                    <div class="text-center mb-8">
+                        <MudIcon Icon="@Icons.Material.Filled.AppRegistration"
+                                 Size="Size.Large"
+                                 Color="Color.Primary"
+                                 Class="mb-4" />
+                        
+                        <MudText Typo="Typo.h4" Align="Align.Center" Class="font-weight-bold">
+                            Criar Conta
+                        </MudText>
+                        
+                        <MudText Typo="Typo.body2" Align="Align.Center" Color="Color.Secondary" Class="mt-2">
+                            Preencha os dados abaixo para começar
+                        </MudText>
+                    </div>
+
+                    <!-- Formulário -->
+                    <EditForm Model="model" OnValidSubmit="Register">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary Class="mb-4" />
+
+                        <!-- Email -->
+                        <MudTextField @bind-Value="model.Email"
+                                      Label="E-mail"
+                                      For="@(() => model.Email)"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      Required="true"
+                                      RequiredError="O e-mail é obrigatório"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Email"
+                                      Class="mb-4" />
+
+                        <!-- Senha -->
+                        <MudTextField @bind-Value="model.Password"
+                                      Label="Senha"
+                                      For="@(() => model.Password)"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      InputType="InputType.Password"
+                                      Required="true"
+                                      RequiredError="A senha é obrigatória"
+                                      Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Lock"
+                                      Class="mb-4" />
+
+                        <!-- Termos de Uso -->
+                        <MudCheckBox T="bool"
+                                     @bind-Value="model.AceitoTermos"
+                                     Color="Color.Primary"
+                                     Class="mb-6">
+                            <MudText Typo="Typo.body2">
+                                Eu li e aceito os
+                                <MudLink Href="/termos" Underline="Underline.Always">
+                                    Termos de Uso
+                                </MudLink>
+                                e
+                                <MudLink Href="/privacidade" Underline="Underline.Always">
+                                    Política de Privacidade
+                                </MudLink>
+                            </MudText>
+                        </MudCheckBox>
+
+                        <!-- Botão de Registro -->
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   Size="Size.Large"
+                                   FullWidth="true"
+                                   Class="register-button mb-4"
+                                   Disabled="@(!model.AceitoTermos)"
+                                   ButtonType="ButtonType.Submit">
+                            <MudIcon Icon="@Icons.Material.Filled.AppRegistration" Class="mr-2" />
+                            @if (isLoading)
+                            {
+                                <MudProgressCircular Size="Size.Small" Color="Color.Inherit" Class="mr-2" />
+                                <span>Criando...</span>
+                            }
+                            else
+                            {
+                                <span>Criar Minha Conta</span>
+                            }
+                        </MudButton>
+
+                        <!-- Link para Login -->
+                        <div class="text-center">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                Já tem uma conta?
+                                <MudLink Href="/login" Color="Color.Primary" Underline="Underline.Hover">
+                                    Faça login aqui
+                                </MudLink>
+                            </MudText>
+                        </div>
+                    </EditForm>
+
+                    <!-- Divisor com Redes Sociais -->
+                    <MudDivider Class="my-6">ou</MudDivider>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+</div>
