@@ -1,9 +1,0 @@
-<Solution>
-  <Folder Name="/Src/" />
-  <Folder Name="/Src/3 - Infrastructure &amp; Shared/">
-    <Project Path="../HermesSales.Infrastructure/HermesSales.Infrastructure.csproj" />
-  </Folder>
-  <Folder Name="/Src/4 - Api/">
-    <Project Path="HermesSales.Api.csproj" />
-  </Folder>
-</Solution>
