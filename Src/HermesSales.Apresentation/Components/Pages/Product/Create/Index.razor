@@ -1,0 +1,162 @@
+@page "/product/create"
+@using HermesSales.Apresentation.Handlers
+@inject ProductHandler ProductHandler
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@rendermode InteractiveServer
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-8">
+
+    <MudText Typo="Typo.h5" Class="mb-6">Cadastrar Produto</MudText>
+
+    <MudCard Elevation="4">
+        <MudCardContent>
+
+            <MudTextField T="string"
+                          Label="Nome"
+                          @bind-Value="model.Name"
+                          Variant="Variant.Outlined"
+                          Required="true"
+                          Class="mb-4" />
+
+            <MudTextField T="string"
+                          Label="Descrição"
+                          @bind-Value="model.Description"
+                          Variant="Variant.Outlined"
+                          Lines="3"
+                          Class="mb-4" />
+
+            <MudNumericField T="decimal"
+                             Label="Preço"
+                             @bind-Value="model.Price"
+                             Variant="Variant.Outlined"
+                             Min="0"
+                             Format="F2"
+                             Class="mb-4" />
+
+            <MudNumericField T="int"
+                             Label="Quantidade em Estoque"
+                             @bind-Value="model.StockQuantity"
+                             Variant="Variant.Outlined"
+                             Min="0"
+                             Class="mb-4" />
+
+            <MudFileUpload T="IReadOnlyList<IBrowserFile>" 
+                           FilesChanged="UploadFiles" 
+                           Accept=".png, .jpg, .jpeg"
+                           MaximumFileCount="3"
+                           Hidden="false"
+                           Class="mb-4">
+                <ActivatorContent>
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.CloudUpload">
+                        Upload Fotos (Máx 3)
+                    </MudButton>
+                </ActivatorContent>
+            </MudFileUpload>
+
+            @if (files.Any())
+            {
+                <MudList T="string" Dense="true">
+                    @foreach (var file in files)
+                    {
+                        <MudListItem Icon="@Icons.Material.Filled.AttachFile">
+                            @file.Name (@file.Size bytes)
+                        </MudListItem>
+                    }
+                </MudList>
+            }
+
+        </MudCardContent>
+
+        <MudCardActions Class="px-4 pb-4">
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       FullWidth="true"
+                       Disabled="isLoading"
+                       OnClick="Submit">
+
+                @if (isLoading)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                    <span>Salvando...</span>
+                }
+                else
+                {
+                    <span>Cadastrar</span>
+                }
+
+            </MudButton>
+        </MudCardActions>
+
+    </MudCard>
+
+</MudContainer>
+
+@code {
+
+    private bool isLoading = false;
+    private FormModel model = new();
+    private IReadOnlyList<IBrowserFile> files = new List<IBrowserFile>();
+
+    private class FormModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public decimal Price { get; set; } = 0;
+        public int StockQuantity { get; set; } = 0;
+    }
+
+    private void UploadFiles(IReadOnlyList<IBrowserFile> incomingFiles)
+    {
+        if (incomingFiles.Count > 3)
+        {
+            Snackbar.Add("Você pode selecionar no máximo 3 fotos.", Severity.Warning);
+            return;
+        }
+        files = incomingFiles;
+    }
+
+    private async Task Submit()
+    {
+        isLoading = true;
+
+        try
+        {
+            var images = new List<ProductHandler.ImageModel>();
+            foreach (var file in files)
+            {
+                using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
+                var buffer = new byte[file.Size];
+                await stream.ReadAsync(buffer);
+                images.Add(new ProductHandler.ImageModel(buffer, file.Name, file.ContentType));
+            }
+
+            var result = await ProductHandler.CreateAsync(new ProductHandler.CreateProductModel(
+                model.Name,
+                model.Description,
+                model.Price,
+                model.StockQuantity,
+                images));
+
+            if (result.Success)
+            {
+                Snackbar.Add("Produto cadastrado com sucesso!", Severity.Success);
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                Snackbar.Add(result.Error ?? "Erro ao cadastrar produto.", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Ocorreu um erro: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

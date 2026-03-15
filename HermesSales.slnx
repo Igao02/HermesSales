@@ -4,6 +4,7 @@
     <Project Path="Src/HermesSales.Apresentation/HermesSales.Apresentation.csproj" Id="c5842d56-8f98-4b29-9a56-4c7e428f0ce6" />
   </Folder>
   <Folder Name="/Src/2 - Application &amp; Domain/">
+    <Project Path="Src/HermesSales.Application/HermesSales.Application.csproj" />
     <Project Path="Src/HermesSales.Domain/HermesSales.Domain.csproj" Id="6600d88a-4b50-48b7-862a-affb8c655e05" />
     <Project Path="Src/HermesSales.DomainCore/HermesSales.DomainCore.csproj" Id="1692760a-45f7-433a-ac2f-673945731ef4" />
   </Folder>

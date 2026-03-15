@@ -23,8 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HermesSales.Application\HermesSales.Application.csproj" />
     <ProjectReference Include="..\HermesSales.Infrastructure\HermesSales.Infrastructure.csproj" />
     <ProjectReference Include="..\HermesSales.SharedKernel\HermesSales.SharedKernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\products\" />
   </ItemGroup>
 
 </Project>
