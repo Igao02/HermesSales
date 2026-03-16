@@ -1,12 +1,19 @@
+using Microsoft.AspNetCore.Http;
+using System.Net.Http.Json;
+
 namespace HermesSales.Apresentation.Handlers;
 
 public class ProductHandler
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public ProductHandler(IHttpClientFactory httpClientFactory)
+    public ProductHandler(
+        IHttpClientFactory httpClientFactory,
+        IHttpContextAccessor httpContextAccessor)
     {
         _httpClientFactory = httpClientFactory;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<ProductResult> CreateAsync(CreateProductModel model)
@@ -15,10 +22,16 @@ public class ProductHandler
 
         var response = await client.PostAsJsonAsync("/products/create", model);
 
+        Console.WriteLine($"Resposta da API: StatusCode={response.StatusCode}, Content={await response.Content.ReadAsStringAsync()}");
+
         if (response.IsSuccessStatusCode)
             return new ProductResult { Success = true };
 
-        return new ProductResult { Success = false, Error = "Erro ao cadastrar produto." };
+        return new ProductResult
+        {
+            Success = false,
+            Error = "Erro ao cadastrar produto aqui no handler."
+        };
     }
 
     public record CreateProductModel(

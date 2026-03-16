@@ -1,4 +1,4 @@
-using HermesSales.Application.Abstractions;
+using HermesSales.Domain.Repositories;
 using Microsoft.AspNetCore.Hosting;
 
 namespace HermesSales.Infrastructure.Services;

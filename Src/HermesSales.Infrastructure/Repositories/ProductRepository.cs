@@ -1,5 +1,5 @@
-using HermesSales.Application.Abstractions;
 using HermesSales.Domain.Entities;
+using HermesSales.Domain.Repositories;
 using HermesSales.Infrastructure.Data;
 
 namespace HermesSales.Infrastructure.Repositories;

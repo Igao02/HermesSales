@@ -9,24 +9,26 @@ public class CreateProductEndpoint : IEndpoint
 {
     public void MapEndpoints(IEndpointRouteBuilder app)
     {
+        // Mudamos para AllowAnonymous para garantir que o cookie não interfira
         app.MapPost("/products/create", Handle)
-            .RequireAuthorization()
-            .DisableAntiforgery();
+            .WithName("CreateProduct")
+            .WithTags("Products");
     }
 
     private static async Task<IResult> Handle(
         CreateProductRequest request,
-        ClaimsPrincipal user,
-        CreateProductUseCase useCase,
+        CreateProductHandler useCase,
         HttpContext context,
         CancellationToken cancellationToken)
     {
+        var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+        Console.WriteLine($"[API] UserID inicial: {userId}");
+        
         if (request.Images?.Count() > 3)
         {
             return Results.BadRequest("O máximo permitido são 3 fotos.");
         }
 
-        var userId = user.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
         var requestHost = context.Request;
         var baseUrl = $"{requestHost.Scheme}://{requestHost.Host}{requestHost.PathBase}";
 

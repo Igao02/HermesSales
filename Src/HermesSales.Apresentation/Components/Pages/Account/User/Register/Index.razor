@@ -6,20 +6,10 @@
 
 <div class="register-page">
     <MudContainer MaxWidth="MaxWidth.Small" Class="py-8">
-
-        <AuthorizeView>
-            <Authorized>
-                <h3>Usuário autenticado</h3>
-            </Authorized>
-
-            <NotAuthorized>
-                <h3>Usuário NÃO autenticado</h3>
-            </NotAuthorized>
-        </AuthorizeView>
         <MudGrid Justify="Justify.Center">
             <MudItem xs="12">
                 <!-- Card Principal -->
-                <MudPaper Elevation="5" Class="register-card pa-8" Outlined="false" Rounded="true">
+                <MudPaper elevation="5" class="register-card pa-8" outlined="false" square="false">
                     <!-- Logo e Título -->
                     <div class="text-center mb-8">
                         <MudIcon Icon="@Icons.Material.Filled.AppRegistration"
@@ -111,11 +101,11 @@
                                     Faça login aqui
                                 </MudLink>
                             </MudText>
-                        </div>
+                        </div>  
                     </EditForm>
 
                     <!-- Divisor com Redes Sociais -->
-                    <MudDivider Class="my-6">ou</MudDivider>
+                    <MudDivider Class="my-6"/>       
                 </MudPaper>
             </MudItem>
         </MudGrid>

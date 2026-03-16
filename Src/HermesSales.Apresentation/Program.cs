@@ -6,16 +6,18 @@ using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddSingleton<CookieContainer>();
 builder.Services.AddHttpClient("ApiBack", client =>
 {
     client.BaseAddress = new Uri("https://localhost:7238");
 })
-.ConfigurePrimaryHttpMessageHandler(() =>
+.ConfigurePrimaryHttpMessageHandler(sp =>
 {
     return new HttpClientHandler
     {
         UseCookies = true,
-        CookieContainer = new CookieContainer()
+        CookieContainer = sp.GetRequiredService<CookieContainer>()
     };
 });
 
@@ -26,7 +28,7 @@ builder.Services.AddMudServices();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Autenticação (somente cookies)
+// Autenticação
 builder.Services.AddAuthentication("Identity.Application")
     .AddCookie("Identity.Application");
 
@@ -36,11 +38,7 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<AuthHandler>();
 builder.Services.AddScoped<ProductHandler>();
 
-builder.Services.AddScoped(sp =>
-{
-    var navigationManager = sp.GetRequiredService<Microsoft.AspNetCore.Components.NavigationManager>();
-    return new HttpClient { BaseAddress = new Uri(navigationManager.BaseUri) };
-});
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -57,6 +55,7 @@ app.UseAuthorization();
 
 app.UseAntiforgery();
 
+app.UseStaticFiles();
 app.MapStaticAssets();
 
 app.MapRazorComponents<App>()

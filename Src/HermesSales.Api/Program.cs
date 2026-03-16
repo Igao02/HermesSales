@@ -1,11 +1,13 @@
 using HermesSales.Api.Extensions;
-using HermesSales.Application.Abstractions;
 using HermesSales.Application.UseCases.Products.CreateProduct;
+using HermesSales.Domain.Repositories;
 using HermesSales.Infrastructure.Data;
 using HermesSales.Infrastructure.Repositories;
 using HermesSales.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +42,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IFileService, FileService>();
-builder.Services.AddScoped<CreateProductUseCase>();
+builder.Services.AddScoped<CreateProductHandler>();
 
 // Cookie importante para cross-domain
 builder.Services.ConfigureApplicationCookie(options =>

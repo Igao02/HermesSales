@@ -1,0 +1,56 @@
+﻿::deep .mud-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    ::deep .mud-card:hover {
+        transform: translateY(-4px);
+    }
+
+::deep .mud-input {
+    transition: all 0.3s ease;
+}
+
+    ::deep .mud-input:focus-within {
+        transform: translateX(8px);
+    }
+
+::deep .mud-button-filled {
+    transition: all 0.3s ease;
+}
+
+    ::deep .mud-button-filled:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+::deep .mud-paper {
+    transition: all 0.3s ease;
+}
+
+/* Animações para feedback visual */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+::deep .mud-grid-item {
+    animation: slideIn 0.5s ease forwards;
+}
+
+/* Estilo para o botão de upload */
+::deep .upload-zone {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+    ::deep .upload-zone:hover {
+        border-color: var(--mud-palette-primary);
+        background: rgba(var(--mud-palette-primary-rgb), 0.05);
+    }

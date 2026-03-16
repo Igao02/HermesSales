@@ -1,6 +1,6 @@
-using HermesSales.Domain.Entities;
+﻿using HermesSales.Domain.Entities;
 
-namespace HermesSales.Application.Abstractions;
+namespace HermesSales.Domain.Repositories;
 
 public interface IProductRepository
 {

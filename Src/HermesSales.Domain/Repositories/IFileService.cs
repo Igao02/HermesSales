@@ -1,4 +1,4 @@
-namespace HermesSales.Application.Abstractions;
+﻿namespace HermesSales.Domain.Repositories;
 
 public interface IFileService
 {
