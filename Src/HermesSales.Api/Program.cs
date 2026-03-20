@@ -1,5 +1,6 @@
 using HermesSales.Api.Extensions;
 using HermesSales.Application.UseCases.Products.CreateProduct;
+using HermesSales.Application.UseCases.Products.GetProducts;
 using HermesSales.Domain.Repositories;
 using HermesSales.Infrastructure.Data;
 using HermesSales.Infrastructure.Repositories;
@@ -43,6 +44,7 @@ builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<CreateProductHandler>();
+builder.Services.AddScoped<GetProductsHandler>();
 
 // Cookie importante para cross-domain
 builder.Services.ConfigureApplicationCookie(options =>

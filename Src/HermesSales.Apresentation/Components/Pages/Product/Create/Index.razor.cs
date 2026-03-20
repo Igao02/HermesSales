@@ -1,4 +1,5 @@
 using HermesSales.Apresentation.Handlers;
+using HermesSales.Apresentation.Handlers.Products.Create;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
@@ -14,7 +15,7 @@ public class IndexPageBase : ComponentBase
 
     [Inject] public ISnackbar Snackbar { get; set; } = default!;
     [Inject] protected NavigationManager Navigation { get; set; } = default!;
-    [Inject] private ProductHandler ProductHandlerService { get; set; } = default!;
+    [Inject] private CreateProductHandler CreateProductHandler { get; set; } = default!;
     [Inject] private AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
 
     protected bool isLoading = false;
@@ -76,7 +77,7 @@ public class IndexPageBase : ComponentBase
 
         try
         {
-            var images = new List<ProductHandler.ImageModel>();
+            var images = new List<CreateProductImageModel>();
 
             foreach (var file in files)
             {
@@ -88,25 +89,14 @@ public class IndexPageBase : ComponentBase
                 while (totalRead < size)
                 {
                     int read = await stream.ReadAsync(buffer.AsMemory(totalRead, size - totalRead));
-                    if (read == 0)
-                    {
-                        if (totalRead == 0)
-                        {
-                            buffer = Array.Empty<byte>();
-                        }
-                        else if (totalRead < size)
-                        {
-                            Array.Resize(ref buffer, totalRead);
-                        }
-                        break;
-                    }
+                    if (read == 0) break;
                     totalRead += read;
                 }
 
-                images.Add(new ProductHandler.ImageModel(buffer, file.Name, file.ContentType));
+                images.Add(new CreateProductImageModel(buffer, file.Name, file.ContentType));
             }
 
-            var result = await ProductHandlerService.CreateAsync(new ProductHandler.CreateProductModel(
+            var result = await CreateProductHandler.ExecuteAsync(new CreateProductModel(
                 model.Name,
                 model.Description,
                 model.Price,

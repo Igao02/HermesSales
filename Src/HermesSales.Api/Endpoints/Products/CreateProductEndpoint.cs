@@ -22,8 +22,14 @@ public class CreateProductEndpoint : IEndpoint
         CancellationToken cancellationToken)
     {
         var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
-        Console.WriteLine($"[API] UserID inicial: {userId}");
+        Console.WriteLine($"UserId extraído do token: {userId}"); // Log para verificar o userId
         
+        if (string.IsNullOrEmpty(userId))
+        {
+
+            return Results.BadRequest("UserId não encontrado no token. Certifique-se de que o token JWT está sendo enviado corretamente.");
+        }
+
         if (request.Images?.Count() > 3)
         {
             return Results.BadRequest("O máximo permitido são 3 fotos.");

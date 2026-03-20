@@ -1,6 +1,8 @@
 using HermesSales.Apresentation.Components;
 using HermesSales.Apresentation.Extensions;
 using HermesSales.Apresentation.Handlers;
+using HermesSales.Apresentation.Handlers.Products.Create;
+using HermesSales.Apresentation.Handlers.Products.List;
 using MudBlazor.Services;
 using System.Net;
 
@@ -36,7 +38,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddScoped<AuthHandler>();
-builder.Services.AddScoped<ProductHandler>();
+builder.Services.AddScoped<CreateProductHandler>();
+builder.Services.AddScoped<ListProductsHandler>();
 
 builder.Services.AddHttpContextAccessor();
 
