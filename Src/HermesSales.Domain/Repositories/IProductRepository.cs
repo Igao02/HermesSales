@@ -1,4 +1,4 @@
-﻿using HermesSales.Domain.Entities;
+﻿﻿using HermesSales.Domain.Entities;
 
 namespace HermesSales.Domain.Repositories;
 

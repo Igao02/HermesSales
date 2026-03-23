@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Novo Perfil",
+    "Projects": [
+      {
+        "Path": "Src\\HermesSales.Apresentation\\HermesSales.Apresentation.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Src\\HermesSales.Api\\HermesSales.Api.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
