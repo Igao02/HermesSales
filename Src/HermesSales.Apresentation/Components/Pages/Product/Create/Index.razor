@@ -1,0 +1,181 @@
+@page "/product/create"
+@using HermesSales.Apresentation.Handlers.Products.Create
+@inherits IndexPageBase
+@rendermode InteractiveServer
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8 mb-8">
+    
+    <!-- Header com breadcrumb -->
+    <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-6">
+        <MudIconButton Icon="@Icons.Material.Filled.ArrowBack"
+                       OnClick="@(() => Navigation.NavigateTo("/"))"
+                       Color="Color.Primary"
+                       Size="Size.Medium" />
+        <MudText Typo="Typo.h4" Class="flex-grow-1">
+            <MudText Typo="Typo.subtitle2" Color="Color.Primary">Produtos</MudText>
+            Cadastrar Novo Produto
+        </MudText>
+    </MudStack>
+
+    <!-- Card principal com gradiente -->
+    <MudPaper Elevation="4" Class="pa-8" Style="background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%); border-radius: 24px;">
+        
+        <!-- Stepper moderno -->
+        <MudStepper Class="mb-8">
+            <MudStep Title="Informações Básicas"
+                     Completed="@Step1Completed" />
+            <MudStep Title="Detalhes"
+                     Completed="@Step2Completed" />
+            <MudStep Title="Imagens"
+                     Completed="@Step3Completed" />
+        </MudStepper>
+
+        <!-- Formulário principal -->
+        <MudGrid Spacing="4">
+            
+            <!-- Primeira Coluna -->
+            <MudItem xs="12" sm="6">
+                <MudText Typo="Typo.subtitle1" Class="mb-2">Nome do Produto *</MudText>
+                <MudTextField T="string"
+                              @bind-Value="model.Name"
+                              For="@(() => model.Name)"
+                              Variant="Variant.Outlined"
+                              Placeholder="Ex: Smartphone XYZ"
+                              AdornmentIcon="@Icons.Material.Filled.ShoppingBag"
+                              AdornmentColor="Color.Primary"
+                              Class="mb-4" />
+            </MudItem>
+
+           
+
+            <!-- Descrição (Full Width) -->
+            <MudItem xs="12">
+                <MudText Typo="Typo.subtitle1" Class="mb-2">Descrição do Produto</MudText>
+                <MudTextField T="string"
+                              @bind-Value="model.Description"
+                              For="@(() => model.Description)"
+                              Variant="Variant.Outlined"
+                              Placeholder="Descreva as principais características do produto..."
+                              Lines="4"
+                              AdornmentIcon="@Icons.Material.Filled.Description"
+                              AdornmentColor="Color.Primary"
+                              Class="mb-4" />
+            </MudItem>
+
+            <!-- Preço e Estoque -->
+            <MudItem xs="12" sm="6">
+                <MudText Typo="Typo.subtitle1" Class="mb-2">Preço *</MudText>
+                <MudNumericField T="decimal"
+                                 @bind-Value="model.Price"
+                                 For="@(() => model.Price)"
+                                 Variant="Variant.Outlined"
+                                 Min="0"
+                                 Format="C2"
+                                 Adornment="Adornment.Start"
+                                 AdornmentText="R$"
+                                 Class="mb-4" />
+            </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <MudText Typo="Typo.subtitle1" Class="mb-2">Quantidade em Estoque *</MudText>
+                <MudNumericField T="int"
+                                 @bind-Value="model.StockQuantity"
+                                 For="@(() => model.StockQuantity)"
+                                 Variant="Variant.Outlined"
+                                 Min="0"
+                                 AdornmentIcon="@Icons.Material.Filled.Inventory"
+                                 AdornmentColor="Color.Primary"
+                                 Class="mb-4" />
+            </MudItem>
+
+            <!-- Upload de Imagens -->
+            <MudItem xs="12">
+                <MudText Typo="Typo.subtitle1" Class="mb-2">Imagens do Produto (Máx. 3)</MudText>
+                
+                <MudPaper Elevation="1" Class="pa-4" Style="border: 2px dashed #e0e0e0; border-radius: 12px; background: #fafafa;">
+                    <MudFileUpload T="IReadOnlyList<IBrowserFile>"
+                                   filesChanged="UploadFiles"
+                                   accept=".png, .jpg, .jpeg"
+                                   maximumFileCount="3">
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.CloudUpload"
+                                   Disabled="files.Count >= 3">
+                            Selecionar Imagens
+                        </MudButton>
+
+                    </MudFileUpload>
+
+                    <!-- Preview das imagens -->
+                    @if (files.Any())
+                    {
+                        <MudGrid Spacing="2" Class="mt-4">
+                            @foreach (var file in files)
+                            {
+                                <MudItem xs="12" sm="4">
+                                    <MudPaper Elevation="2" Class="pa-2 text-center" Style="border-radius: 12px;">
+                                        <MudIcon Icon="@Icons.Material.Filled.Image"
+                                                 Size="Size.Large"
+                                                 Color="Color.Primary" />
+                                        <MudText Typo="Typo.body2" Align="Align.Center" Class="mt-2">
+                                            @file.Name
+                                        </MudText>
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                            @(file.Size / 1024) KB
+                                        </MudText>
+                                    </MudPaper>
+                                </MudItem>
+                            }
+                        </MudGrid>
+                    }
+                </MudPaper>
+            </MudItem>
+
+            <!-- Ações -->
+            <MudItem xs="12">
+                <MudStack Row="true" Justify="Justify.FlexEnd" Spacing="2" Class="mt-6">
+                    <MudButton Variant="Variant.Text"
+                               Color="Color.Default"
+                               OnClick="@(() => Navigation.NavigateTo("/"))">
+                        Cancelar
+                    </MudButton>
+                    
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Save"
+                               Disabled="isLoading || !IsFormValid"
+                               OnClick="Submit"
+                               Size="Size.Large"
+                               Style="min-width: 150px; border-radius: 8px;">
+                        
+                        @if (isLoading)
+                        {
+                            <MudProgressCircular Size="Size.Small"
+                                                 Indeterminate="true"
+                                                 Color="Color.Inherit"
+                                                 Class="mr-2" />
+                            <span>Salvando...</span>
+                        }
+                        else
+                        {
+                            <span>Cadastrar Produto</span>
+                        }
+                        
+                    </MudButton>
+                </MudStack>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <!-- Card de ajuda -->
+    <MudAlert Severity="Severity.Info"
+              Variant="Variant.Outlined"
+              Class="mt-4"
+              Icon="@Icons.Material.Filled.Info">
+        <MudText Typo="Typo.body2">
+            <strong>Dicas:</strong> O nome do produto e preço são obrigatórios.
+            Você pode adicionar até 3 imagens (máx. 10MB cada).
+        </MudText>
+    </MudAlert>
+
+</MudContainer>

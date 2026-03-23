@@ -16,6 +16,7 @@ public class Product : Entity
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
     public string? ApplicationUserId { get; set; }
+    public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
 
     public Product(string name, string description, decimal price, int stockQuantity, DateTime createdAt, bool isActive, string applicationUserId)
     {
