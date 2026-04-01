@@ -1,5 +1,3 @@
-using System.Net.Http.Json;
-
 namespace HermesSales.Apresentation.Handlers.Products.List;
 
 public class ListProductsHandler

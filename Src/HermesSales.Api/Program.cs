@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 using Microsoft.AspNetCore.DataProtection;
+using HermesSales.Application.UseCases.Products.GetProduct;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +46,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<CreateProductHandler>();
 builder.Services.AddScoped<GetProductsHandler>();
+builder.Services.AddScoped<GetProductHandler>();
 
 // Cookie importante para cross-domain
 builder.Services.ConfigureApplicationCookie(options =>
