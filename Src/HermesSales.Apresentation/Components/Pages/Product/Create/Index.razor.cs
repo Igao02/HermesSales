@@ -16,7 +16,6 @@ public class IndexPageBase : ComponentBase
     [Inject] public ISnackbar Snackbar { get; set; } = default!;
     [Inject] protected NavigationManager Navigation { get; set; } = default!;
     [Inject] private CreateProductHandler CreateProductHandler { get; set; } = default!;
-    [Inject] private AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
 
     protected bool isLoading = false;
     protected string selectedCategory = string.Empty;

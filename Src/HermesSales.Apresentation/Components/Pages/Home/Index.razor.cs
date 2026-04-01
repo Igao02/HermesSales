@@ -19,7 +19,7 @@ public class IndexPageBase : ComponentBase
     protected async Task LoadProducts()
     {
         IsLoading = true;
-        await Task.Delay(1000); // Simula carregamento
+        await Task.Delay(1000);
         try
         {
             Products = await ListProductsHandler.ExecuteAsync(new ListProductsQuery());

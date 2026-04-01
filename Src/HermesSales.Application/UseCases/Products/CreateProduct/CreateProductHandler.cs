@@ -17,9 +17,6 @@ public class CreateProductHandler
 
     public async Task<Result<CreateProductResponse>> ExecuteAsync(CreateProductCommand command, CancellationToken cancellationToken = default)
     {
-        Console.WriteLine($"[USECASE] Iniciando criação do produto: {command.Name}");
-        Console.WriteLine($"[USECASE] ID do Usuário recebido: {command.ApplicationUserId}");
-
         var product = new Product(
             command.Name,
             command.Description,
