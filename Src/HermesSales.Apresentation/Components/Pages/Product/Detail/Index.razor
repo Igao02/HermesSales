@@ -200,6 +200,116 @@
             </MudItem>
         </MudGrid>
     }
+
+    <!-- Seção de Perguntas com IA -->
+    @if (Product != null)
+    {
+        <MudPaper Elevation="0" Class="mt-8 pa-6 pa-md-8" Style="border-radius: 28px; background: white;">
+            <div class="d-flex align-center gap-3 mb-4">
+                <MudIcon Icon="@Icons.Material.Filled.SmartToy" Style="color: #2c7da0; font-size: 32px;" />
+                <div>
+                    <MudText Typo="Typo.h5" Style="font-weight: 700; color: #1a202c;">
+                        Pergunte sobre este produto
+                    </MudText>
+                    <MudText Typo="Typo.body2" Style="color: #718096;">
+                        Nossa IA responde com base nas informações cadastradas
+                    </MudText>
+                </div>
+            </div>
+
+            <!-- Histórico do Chat -->
+            @if (chatMessages.Any())
+            {
+                <div class="chat-history mb-4" style="max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;">
+                    @foreach (var message in chatMessages)
+                    {
+                        @if (message.IsUser)
+                        {
+                            <div class="d-flex justify-end">
+                                <MudPaper Elevation="0" Class="pa-3"
+                                          Style="background: #2c7da0; color: white; border-radius: 18px 18px 4px 18px; max-width: 75%;">
+                                    <MudText Typo="Typo.body2" Style="color: white;">@message.Text</MudText>
+                                </MudPaper>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-flex justify-start gap-2">
+                                <MudAvatar Style="background: #ebf8ff; width: 32px; height: 32px; flex-shrink: 0;">
+                                    <MudIcon Icon="@Icons.Material.Filled.SmartToy" Size="Size.Small" Style="color: #2c7da0;" />
+                                </MudAvatar>
+                                <MudPaper Elevation="0" Class="pa-3"
+                                          Style="background: #f7fafc; border-radius: 4px 18px 18px 18px; max-width: 75%; border: 1px solid #e2e8f0;">
+                                    <MudText Typo="Typo.body2" Style="color: #2d3748; white-space: pre-line;">@message.Text</MudText>
+                                </MudPaper>
+                            </div>
+                        }
+                    }
+
+                    @if (isAiLoading)
+                    {
+                        <div class="d-flex justify-start gap-2">
+                            <MudAvatar Style="background: #ebf8ff; width: 32px; height: 32px; flex-shrink: 0;">
+                                <MudIcon Icon="@Icons.Material.Filled.SmartToy" Size="Size.Small" Style="color: #2c7da0;" />
+                            </MudAvatar>
+                            <MudPaper Elevation="0" Class="pa-3"
+                                      Style="background: #f7fafc; border-radius: 4px 18px 18px 18px; border: 1px solid #e2e8f0;">
+                                <div class="d-flex gap-1 align-center">
+                                    <span style="animation: bounce 1s infinite 0s; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2c7da0;"></span>
+                                    <span style="animation: bounce 1s infinite 0.2s; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2c7da0;"></span>
+                                    <span style="animation: bounce 1s infinite 0.4s; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2c7da0;"></span>
+                                </div>
+                            </MudPaper>
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Input da Pergunta -->
+            <div class="d-flex gap-3 align-end">
+                <MudTextField @bind-Value="userQuestion"
+                              Label="Faça uma pergunta sobre este produto..."
+                              Variant="Variant.Outlined"
+                              Lines="2"
+                              Style="flex: 1;"
+                              Disabled="@isAiLoading"
+                              OnKeyDown="HandleKeyDown" />
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           Disabled="@(isAiLoading || string.IsNullOrWhiteSpace(userQuestion))"
+                           OnClick="AskAI"
+                           Style="border-radius: 14px; padding: 12px 24px; height: 56px; min-width: 120px;">
+                    @if (isAiLoading)
+                    {
+                        <MudProgressCircular Size="Size.Small" Indeterminate="true" Style="color: white;" />
+                    }
+                    else
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.Send" />
+                    }
+                </MudButton>
+            </div>
+
+            <!-- Sugestões rápidas -->
+            @if (!chatMessages.Any())
+            {
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    @foreach (var suggestion in quickSuggestions)
+                    {
+                        <MudChip T="string"
+                                 Size="Size.Small"
+                                 Variant="Variant.Outlined"
+                                 Color="Color.Primary"
+                                 OnClick="() => AskSuggestion(suggestion)"
+                                 Style="cursor: pointer;">
+                            @suggestion
+                        </MudChip>
+                    }
+                </div>
+            }
+        </MudPaper>
+    }
 </MudContainer>
 
 <!-- Lightbox Modal (imagem ampliada mantendo proporção mas com container fixo) -->
@@ -232,74 +342,5 @@
             @(currentImageIndex + 1) / @Product.ImageUrls.Count()
         </div>
     </div>
-}
-
-@code {
-    private int quantity = 1;
-    private int currentImageIndex = 0;
-    private bool showLightbox = false;
-    
-    private async Task AddToCart()
-    {
-        Snackbar.Add($"Produto adicionado ao carrinho! Quantidade: {quantity}", Severity.Success);
-        // Implemente sua lógica de carrinho aqui
-    }
-    
-    private void SetCurrentImage(int index)
-    {
-        if (Product != null && Product.ImageUrls != null && index >= 0 && index < Product.ImageUrls.Count())
-        {
-            currentImageIndex = index;
-            StateHasChanged();
-        }
-    }
-    
-    private void PreviousImage()
-    {
-        if (currentImageIndex > 0)
-        {
-            currentImageIndex--;
-            StateHasChanged();
-        }
-    }
-    
-    private void NextImage()
-    {
-        if (Product != null && Product.ImageUrls != null && currentImageIndex < Product.ImageUrls.Count() - 1)
-        {
-            currentImageIndex++;
-            StateHasChanged();
-        }
-    }
-    
-    private void PreviousImageLightbox()
-    {
-        if (currentImageIndex > 0)
-        {
-            currentImageIndex--;
-            StateHasChanged();
-        }
-    }
-    
-    private void NextImageLightbox()
-    {
-        if (Product != null && Product.ImageUrls != null && currentImageIndex < Product.ImageUrls.Count() - 1)
-        {
-            currentImageIndex++;
-            StateHasChanged();
-        }
-    }
-    
-    private void OpenLightbox()
-    {
-        showLightbox = true;
-        StateHasChanged();
-    }
-    
-    private void CloseLightbox()
-    {
-        showLightbox = false;
-        StateHasChanged();
-    }
 }
 
