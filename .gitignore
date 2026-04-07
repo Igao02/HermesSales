@@ -2,3 +2,4 @@
 .vs/
 obj/
 bin/
+/Src/HermesSales.Apresentation/appsettings.json
