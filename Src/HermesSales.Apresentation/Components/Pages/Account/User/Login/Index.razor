@@ -1,66 +1,135 @@
 ﻿@page "/login"
 @using HermesSales.Apresentation.Handlers
+@using System.ComponentModel.DataAnnotations
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 @rendermode InteractiveServer
 
-<MudContainer MaxWidth="MaxWidth.Small" Class="d-flex justify-center mt-12">
+<div class="login-page">
+    <MudThemeProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
 
-    <MudCard Style="width:400px;" Elevation="6">
+    <MudContainer MaxWidth="MaxWidth.Small" Class="pa-4">
+        <MudCard Elevation="0" Class="modern-card" Style="overflow: visible;">
+            <MudCardContent Class="pa-8">
+                <!-- Product Icon / Logo -->
+                <div class="product-icon">
+                    <MudIcon Icon="@Icons.Material.Filled.Storefront" Color="Color.Inherit" Size="Size.Large" Style="color: white;" />
+                </div>
 
-        <MudCardContent>
+                <!-- Title Section -->
+                <MudText Typo="Typo.h4" Align="Align.Center" Class="mb-2 font-weight-bold gradient-text">
+                    Hermes Sales
+                </MudText>
 
-            <MudText Typo="Typo.h5" Class="mb-4">
-                Login
-            </MudText>
+                <MudText Typo="Typo.body2" Align="Align.Center" Color="Color.Primary" Class="mb-6 grey--text text--darken-1">
+                    Sistema de gerenciamento de vendas
+                </MudText>
 
-            <MudTextField T="string"
-                          Label="E-mail"
-                          @bind-Value="model.Email"
-                          Variant="Variant.Outlined"
-                          Required="true"
-                          RequiredError="O e-mail é obrigatório"
-                          Class="mb-3" />
+                <MudDivider Class="mb-6" />
 
-            <MudTextField T="string"
-                          Label="Senha"
-                          @bind-Value="model.Password"
-                          InputType="InputType.Password"
-                          Variant="Variant.Outlined"
-                          Required="true"
-                          RequiredError="A senha é obrigatória"
-                          Class="mb-4" />
+                <!-- Subtitle -->
+                <MudText Typo="Typo.h6" Class="mb-1 font-weight-medium">
+                    Boas-vindas!
+                </MudText>
 
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       FullWidth="true"
-                       Disabled="isLoading"
-                       OnClick="Login">
+                <MudText Typo="Typo.body2" Color="Color.Primary" Class="mb-6 grey--text text--darken-2">
+                    Acesse sua conta para gerenciar seus produtos e vendas
+                </MudText>
 
-                @if (isLoading)
-                {
-                    <MudProgressCircular Size="Size.Small"
-                                         Indeterminate="true"
-                                         Class="mr-2" />
-                    <span>Entrando...</span>
-                }
-                else
-                {
-                    <span>Entrar</span>
-                }
+                <!-- Login Form -->
+                <MudForm @ref="form" @bind-IsValid="isValid">
+                    <MudTextField T="string"
+                                  Label="E-mail"
+                                  @bind-Value="model.Email"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  RequiredError="O e-mail é obrigatório."
+                                  Validation="@(new EmailAddressAttribute() { ErrorMessage = "Informe um e-mail válido." })"
+                                  Margin="Margin.Dense"
+                                  Class="mb-4"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Email"
+                                  AdornmentColor="Color.Primary" />
 
-            </MudButton>
+                    <MudTextField T="string"
+                                  Label="Senha"
+                                  @bind-Value="model.Password"
+                                  InputType="@passwordInputType"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  RequiredError="A senha é obrigatória."
+                                  Validation="@(new Func<string, string?>(ValidatePassword))"
+                                  Margin="Margin.Dense"
+                                  Class="mb-2"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Lock"
+                                  AdornmentColor="Color.Primary"
+                                  OnAdornmentClick="TogglePasswordVisibility" />
 
-        </MudCardContent>
+                    <!-- Forgot Password Link -->
+                    <div class="d-flex justify-end mb-6">
+                        <MudText Typo="Typo.body2" Class="link-hover" Color="Color.Primary">
+                            Esqueceu a senha? Ainda em desenvolvimento
+                        </MudText>
+                    </div>
 
-    </MudCard>
+                    <!-- Login Button -->
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               FullWidth="true"
+                               Disabled="@(isLoading || !isValid)"
+                               OnClick="HandleLogin"
+                               Class="custom-button mb-4"
+                               Style="height: 48px; border-radius: 12px;">
+                        @if (isLoading)
+                        {
+                            <MudProgressCircular Size="Size.Small"
+                                                 Indeterminate="true"
+                                                 Class="mr-2"
+                                                 Color="Color.Inherit" />
+                            <span>Entrando...</span>
+                        }
+                        else
+                        {
+                            <MudIcon Icon="@Icons.Material.Filled.Login" Class="mr-2" />
+                            <span>Entrar no sistema</span>
+                        }
+                    </MudButton>
 
-</MudContainer>
+                    <!-- Register Link -->
+                    <MudText Typo="Typo.body2" Align="Align.Center" Class="mt-4">
+                        Não tem uma conta?
+                        <MudText Typo="Typo.body2"
+                                 Component="span"
+                                 Color="Color.Primary"
+                                 Class="font-weight-bold link-hover"
+                                 @onclick="() => NavigateToRegister()">
+                            Cadastre-se
+                        </MudText>
+                    </MudText>
+                </MudForm>
+
+                <!-- Footer -->
+                <MudDivider Class="mt-6 mb-4" />
+                <MudText Typo="Typo.caption" Align="Align.Center" Class="grey--text text--darken-2">
+                    © 2024 Hermes Sales - Gestão inteligente
+                </MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudContainer>
+</div>
 
 @code {
-
+    private MudForm form = default!;
+    private bool isValid = false;
     private bool isLoading = false;
+
+    private bool showPassword = false;
+    private InputType passwordInputType => showPassword ? InputType.Text : InputType.Password;
+    private string passwordIcon => showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility;
 
     private LoginModel model = new();
 
@@ -70,9 +139,29 @@
         public string Password { get; set; } = string.Empty;
     }
 
-    private async Task Login()
+    private string? ValidatePassword(string password)
     {
+        if (string.IsNullOrWhiteSpace(password))
+            return "A senha é obrigatória.";
+
+        if (password.Length < 6)
+            return "A senha deve ter no mínimo 6 caracteres.";
+
+        return null;
+    }
+
+    private void TogglePasswordVisibility()
+    {
+        showPassword = !showPassword;
+    }
+
+    private async Task HandleLogin()
+    {
+        if (isLoading || !isValid) return;
+
         isLoading = true;
+        await InvokeAsync(StateHasChanged); 
+        await Task.Delay(3000);
 
         try
         {
@@ -94,7 +183,12 @@
         finally
         {
             isLoading = false;
+            await InvokeAsync(StateHasChanged);
         }
     }
 
+    private async Task NavigateToRegister()
+    {
+        Navigation.NavigateTo("/register");
+    }
 }

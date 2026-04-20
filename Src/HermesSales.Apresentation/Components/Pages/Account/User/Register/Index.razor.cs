@@ -12,7 +12,15 @@ public class IndexPageBase : ComponentBase
     [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
     public RegisterModel model { get; set; } = new();
+
     protected bool isLoading = false;
+
+    public bool showPassword = false;
+
+    public InputType passwordInputType => showPassword ? InputType.Text : InputType.Password;
+    
+    public string passwordIcon => showPassword ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility;
+
 
     public class RegisterModel
     {
@@ -54,7 +62,6 @@ public class IndexPageBase : ComponentBase
 
             var result = await AuthHandler.Register(model);
 
-            // Feedback visual animado
             if (result.Success)
             {
                 Snackbar.Add("Conta criada com sucesso! Verifique seu e-mail para ativação.",
@@ -85,5 +92,10 @@ public class IndexPageBase : ComponentBase
         {
             isLoading = false;
         }
+    }
+
+    protected void TogglePasswordVisibility()
+    {
+        showPassword = !showPassword;
     }
 }
