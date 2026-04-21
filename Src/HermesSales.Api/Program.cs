@@ -43,6 +43,8 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ILogProductRepository, LogProductRepository>();
+builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<CreateProductHandler>();
 builder.Services.AddScoped<GetProductsHandler>();
