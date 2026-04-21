@@ -7,4 +7,5 @@ namespace HermesSales.Infrastructure.Data;
 public class ApplicationUser : IdentityUser
 {
     public List<Product> Products { get; set; } = new List<Product>();
+    public List<LogProduct> LogProducts { get; set; } = new List<LogProduct>();
 }

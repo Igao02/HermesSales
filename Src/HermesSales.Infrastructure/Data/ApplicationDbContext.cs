@@ -8,6 +8,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 {
     public DbSet<Product> Product { get; set; }
     public DbSet<ProductImage> ProductImages { get; set; }
+    public DbSet<LogProduct> LogProduct { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

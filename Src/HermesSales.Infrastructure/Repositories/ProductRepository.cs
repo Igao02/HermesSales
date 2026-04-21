@@ -33,7 +33,7 @@ public class ProductRepository : IProductRepository
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<Product> GetById(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Product?> GetById(Guid id, CancellationToken cancellationToken = default)
     {
         return await _context.Product
             .Include(p => p.Images)
